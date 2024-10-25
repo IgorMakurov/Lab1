@@ -1,0 +1,53 @@
+import random
+
+#Матрица берётся из файла
+def choice_1():
+    with open("matrix.txt", "r") as file:
+        for string in file:
+            line = list(map(int, string.split(',')))
+            matrix.append(row)
+            size += 1
+    return matrix, size
+
+
+#Матрица генерируется случайно
+def choice_2():
+    size = int(input('Введите размер матрицы А (n):'))
+    matrix = str([[random.randint(-10, 10) for x in range(size)] for y in range(size)])
+    return matrix, size
+
+#Копирование матрицы A
+def copy_matrix_A(matrix, size):
+    return [[matrix[i][j] for j in range(size)] for i in range(size)]
+
+#Печать матрицы
+def matrix_output(matrix, size):
+    for line in matrix:
+        print(line)
+    print()
+
+#Сложение матриц A и F
+def matrix_AF(mA, mF, size):
+    return [[mA[i][j] + mF[i][j] for j in range(size)] for i in range(size)]
+
+#Трансопонирование матрицы
+def trans_matrix(matrix, size):
+    return [[matrix[j][i] for j in range(size)] for i in range(size)]
+
+#Умножение матрицы на k
+def matrix_x_k(matrix, size, k):
+    return [[matrix[i][j] * k for j in range(size)] for i in range(size)]
+
+def matrix_x_matrix():
+
+k = int(input('Введите коеффициент (k):'))
+method = int(input('Выберете способ определения матрицы А:\n1. Из файла\n2. Случайно'))
+if method == 1:
+    matrix_A,size = choice_1()
+elif method == 2:
+    matrix_A,n = choice_2()
+else:
+    print('Неверный выбор')
+
+
+matrix_F = copy_matrix_A(matrix_A, n)
