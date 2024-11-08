@@ -2,13 +2,14 @@ import random
 
 #Матрица берётся из файла
 def choice_1():
+    size = 0
+    matrix = []
     with open("matrix.txt", "r") as file:
         for string in file:
             line = list(map(int, string.split(',')))
-            matrix.append(row)
+            matrix.append(line)
             size += 1
     return matrix, size
-
 
 #Матрица генерируется случайно
 def choice_2():
@@ -21,14 +22,17 @@ def copy_matrix_A(matrix, size):
     return [[matrix[i][j] for j in range(size)] for i in range(size)]
 
 #Печать матрицы
-def matrix_output(matrix, size):
+def matrix_output(matrix):
     for line in matrix:
         print(line)
     print()
 
-#Сложение матриц A и F
-def matrix_AF(mA, mF, size):
-    return [[mA[i][j] + mF[i][j] for j in range(size)] for i in range(size)]
+#Вычитание матриц
+def matrix_subtract(m1, m2, size):
+    for i in range(size): 
+         for j in range(size): 
+                  result[i][j] = m1[i][j] - m2[i][j] 
+    return result
 
 #Трансопонирование матрицы
 def trans_matrix(matrix, size):
@@ -38,7 +42,61 @@ def trans_matrix(matrix, size):
 def matrix_x_k(matrix, size, k):
     return [[matrix[i][j] * k for j in range(size)] for i in range(size)]
 
-def matrix_x_matrix():
+#Умножение матрицы на матрицу
+def matrix_x_matrix(m1, m2, size):
+    m3 = [[0 for i in range(size)] for i in range(size)]
+    for i in range(size):
+        for j in range(size):
+            for k in range(size):
+                m3[i][j] += m1[i][k] * m2[k][j]
+
+#Определение областей матрицы и проверка условий
+def area_determination(matrix, size, coeff, area_number, check=False):
+    area = []
+    total_number_sum = 0
+    total_less_than_k = 0
+
+    for i in range(size):
+        for j in range(size):
+            if area_defining(i, j, size, area_number):
+                area.append(matrix[i][j])
+                if chek:
+                    if area_number == 2 and i % 2 == 0 and matrix[i][j] >= 0:
+                        total_number_sum += i
+                    if area_number == 3 and j % 2 != 0 and j < coeff:
+                        total_less_than_k += 1
+    if chek:
+        return area, total_number_sum if area_number == 2 else total_less_than_k
+    return area
+
+def area_defining(i, j, size, area_number):
+    if area_number == 1:
+        return i > j and i + j < size - 1
+    elif area_number == 2: 
+        return i < j and i + j < size - 1
+    elif area_number == 3:  
+        return i < j and i + j > size - 1
+    return False
+
+#Перестановка областей
+def area_switch_1(matrix, size, chek_result, a1, a2, a3):
+    if chek_result > 0:  
+        area_switch_2(matrix, size, a2, 3)
+        area_switch_2(matrix, size, a3, 2)
+    else:  
+        a1 = list(reversed(a1))
+        a2 = sorted(a2)
+        area_switch_2(matrix, size, a2, 1)
+        area_switch_2(matrix, size, a1, 2)
+    return matrix
+
+def area_switch_2(matrix, size, new_area, area_number):
+    index = 0
+    for i in range(size):
+        for j in range(size):
+            if area_defining(i, j, size, area_number):
+                matrix[i][j] = new_area[index]
+                index += 1
 
 k = int(input('Введите коеффициент (k):'))
 method = int(input('Выберете способ определения матрицы А:\n1. Из файла\n2. Случайно'))
@@ -49,5 +107,41 @@ elif method == 2:
 else:
     print('Неверный выбор')
 
-
 matrix_F = copy_matrix_A(matrix_A, n)
+
+area_1 = area_determination(matrix_A, n, 1,)
+area_2, number_sum = area_determination(matrix_A, n, 2, True)
+area_3, less_than_k = area_determination(matrix_A, n, 3, True)
+
+matrix_F = area_switch_1(matrix_F, n, less_than_k - number_sum, area_1, area_2, area_3)
+
+matrix_AT = trans_matrix(matrix_A, n)
+
+matrix_KxA = matrix_x_k(matrix_A, n, k)
+
+matrix_KxAxF = matrix_x_matrix(matrix_KxA, matrix_F, n)
+
+matrix_KxAT = matrix_x_k(matrix_AT, n, k)
+
+matrix_result = matrix_subtract(matrix_KxAxF, matrix_KxAT, n)
+
+print('Матрица А:')
+matrix_output(matrix_A)
+
+print('Матрица F:')
+matrix_output(matrix_F)
+
+print('Матрица А, умноженная на коэффициент K:')
+matrix_output(matrix_KxA)
+
+print('Матрица А, умноженная на коэффициент K, умноженная на матрицу F:')
+matrix_output(matrix_KxAxF)
+
+print('Транспонированная матрица А:')
+matrix_output(matrix_AT)
+
+print ('Транспонированная матрица А, умноженная на коэффициент K:')
+matrix_output(matrix_KxAT)
+
+print('Финальный результат вычисления:')
+matrix_output(matrix_result)
