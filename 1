@@ -12,10 +12,9 @@ def choice_1():
     return matrix, size
 
 #Матрица генерируется случайно
-def choice_2():
-    size = int(input('Введите размер матрицы А (n):'))
-    matrix = str([[random.randint(-10, 10) for x in range(size)] for y in range(size)])
-    return matrix, size
+def choice_2(size):
+    matrix = [[random.randint(-10, 10) for x in range(size)] for y in range(size)]
+    return matrix
 
 #Копирование матрицы A
 def copy_matrix_A(matrix, size):
@@ -29,12 +28,10 @@ def matrix_output(matrix):
 
 #Вычитание матриц
 def matrix_subtract(m1, m2, size):
-    for i in range(size): 
-         for j in range(size): 
-                  result[i][j] = m1[i][j] - m2[i][j] 
+    result = [[m1[i][j] - m2[i][j] for j in range(size)] for i in range(size)]
     return result
 
-#Трансопонирование матрицы
+#Транспонирование матрицы
 def trans_matrix(matrix, size):
     return [[matrix[j][i] for j in range(size)] for i in range(size)]
 
@@ -44,14 +41,15 @@ def matrix_x_k(matrix, size, k):
 
 #Умножение матрицы на матрицу
 def matrix_x_matrix(m1, m2, size):
-    m3 = [[0 for i in range(size)] for i in range(size)]
+    m3 = [[0 for _ in range(size)] for _ in range(size)]
     for i in range(size):
         for j in range(size):
             for k in range(size):
                 m3[i][j] += m1[i][k] * m2[k][j]
+    return m3
 
 #Определение областей матрицы и проверка условий
-def area_determination(matrix, size, coeff, area_number, check=False):
+def area_determination(matrix, size, area_number, check=False, coeff=0):
     area = []
     total_number_sum = 0
     total_less_than_k = 0
@@ -60,12 +58,12 @@ def area_determination(matrix, size, coeff, area_number, check=False):
         for j in range(size):
             if area_defining(i, j, size, area_number):
                 area.append(matrix[i][j])
-                if chek:
+                if check:
                     if area_number == 2 and i % 2 == 0 and matrix[i][j] >= 0:
                         total_number_sum += i
                     if area_number == 3 and j % 2 != 0 and j < coeff:
                         total_less_than_k += 1
-    if chek:
+    if check:
         return area, total_number_sum if area_number == 2 else total_less_than_k
     return area
 
@@ -98,20 +96,21 @@ def area_switch_2(matrix, size, new_area, area_number):
                 matrix[i][j] = new_area[index]
                 index += 1
 
-k = int(input('Введите коеффициент (k):'))
-method = int(input('Выберете способ определения матрицы А:\n1. Из файла\n2. Случайно'))
+k = int(input('Введите коеффициент (k):\n'))
+method = int(input('Выберете способ определения матрицы А:\n1. Из файла\n2. Случайно\n'))
 if method == 1:
-    matrix_A,size = choice_1()
+    matrix_A,n = choice_1()
 elif method == 2:
-    matrix_A,n = choice_2()
+    n = int(input('Введите размер матрицы А (n):\n'))
+    matrix_A = choice_2(n)
 else:
     print('Неверный выбор')
 
 matrix_F = copy_matrix_A(matrix_A, n)
 
-area_1 = area_determination(matrix_A, n, 1,)
-area_2, number_sum = area_determination(matrix_A, n, 2, True)
-area_3, less_than_k = area_determination(matrix_A, n, 3, True)
+area_1 = area_determination(matrix_A, n, 1)
+area_2, number_sum = area_determination(matrix_A, n, 2, True, k)
+area_3, less_than_k = area_determination(matrix_A, n, 3, True, k)
 
 matrix_F = area_switch_1(matrix_F, n, less_than_k - number_sum, area_1, area_2, area_3)
 
