@@ -1,4 +1,5 @@
 import random
+import sys
 
 #Матрица берётся из файла
 def choice_1():
@@ -105,7 +106,7 @@ elif method == 2:
     matrix_A = choice_2(n)
 else:
     print('Неверный выбор')
-
+    sys.exit(0)
 matrix_F = copy_matrix_A(matrix_A, n)
 
 area_1 = area_determination(matrix_A, n, 1)
