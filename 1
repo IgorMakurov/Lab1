@@ -7,7 +7,7 @@ def choice_1():
     matrix = []
     with open("matrix.txt", "r") as file:
         for string in file:
-            line = list(map(int, string.split(',')))
+            line = list(map(int, string.split(' ')))
             matrix.append(line)
             size += 1
     return matrix, size
