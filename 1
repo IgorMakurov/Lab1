@@ -42,11 +42,7 @@ def matrix_x_k(matrix, size, k):
 
 #Умножение матрицы на матрицу
 def matrix_x_matrix(m1, m2, size):
-    m3 = [[0 for _ in range(size)] for _ in range(size)]
-    for i in range(size):
-        for j in range(size):
-            for k in range(size):
-                m3[i][j] += m1[i][k] * m2[k][j]
+    m3 = [[sum(m1[i][n] * m2[n][j] for n in range(size)) for j in range(size)] for i in range(size)]
     return m3
 
 #Определение областей матрицы и проверка условий
